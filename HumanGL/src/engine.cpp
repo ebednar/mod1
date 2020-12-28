@@ -113,6 +113,7 @@ void Engine::run_engine()
 		cam.update_free();
 		rend.draw_skybox(&skybox, &cam);
 		rend.draw_scene(&animator, &scene, &cam);
+		rend.draw_landscape(&landscape, &cam);
 		//rend.draw_pbr(&scene, &cam);
 
 

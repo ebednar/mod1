@@ -202,5 +202,11 @@ void	Render::draw_skybox(Skybox *skybox, Camera* cam)
 
 void    Render::draw_landscape(Landscape* landscape, Camera* cam)
 {
-    
+    glUseProgram(landscape->shader_id);
+    unsigned int view_loc = glGetUniformLocation(landscape->shader_id, "u_V");
+    glUniformMatrix4fv(view_loc, 1, GL_FALSE, cam->view.mat);
+    unsigned int proj_loc = glGetUniformLocation(landscape->shader_id, "u_P");
+    glUniformMatrix4fv(proj_loc, 1, GL_FALSE, projection.mat);
+    glBindVertexArray(landscape->vao);
+    glDrawArrays(GL_TRIANGLES, 0, (landscape->map_size - 1) * (landscape->map_size - 1) * 3 * 2);
 }

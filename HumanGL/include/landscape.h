@@ -12,11 +12,13 @@ public:
 	unsigned int			vbo;
 	unsigned int			vao;
 	unsigned int			ibo;
+	int						shader_id;
 public:
 	Landscape();
 	~Landscape();
 	void	load_map(std::string path);
 	void	build_heights();
 	void	vertex_buffer();
+	void	set_shader(const char* vPath, const char* fSPath);
 private:
 };
