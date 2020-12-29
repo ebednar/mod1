@@ -3,15 +3,27 @@
 #include <vector>
 #include <string>
 
+struct point
+{
+	float	x;
+	float	y;
+	float	z;
+	point() 
+	{
+		x = 0.0f;
+		y = 0.0f;
+		z = 0.0f;
+	};
+};
+
 class Landscape
 {
 public:
 	std::vector<glm::vec3>	displacements;
-	float					*map;
+	point					*map;
 	int						map_size;
 	unsigned int			vbo;
 	unsigned int			vao;
-	unsigned int			ibo;
 	int						shader_id;
 public:
 	Landscape();

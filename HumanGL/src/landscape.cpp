@@ -7,9 +7,15 @@
 Landscape::Landscape()
 {
 	map_size = 50;
-	map = new float[map_size * map_size];
-	for (int i = 0; i < map_size * map_size; ++i)
-		map[i] = 0.0f;
+	map = new point[map_size * map_size];
+	for (int z = 1; z < map_size; ++z)
+	{
+		for (int x = 1; x < map_size; ++x)
+		{
+			map[z * map_size + x].x = x / 5.0f;
+			map[z * map_size + x].z = z / 5.0f;
+		}
+	}
 }
 
 Landscape::~Landscape()
@@ -44,30 +50,30 @@ void	Landscape::build_heights()
 {
 	int length = displacements.size();
 
-	for (int x = 1; x < map_size - 1; ++x)
+	for (int z = 1; z < map_size - 1; ++z)
 	{
-		for (int y = 1; y < map_size - 1; ++y)
+		for (int x = 1; x < map_size - 1; ++x)
 		{
 			for (int i = 0; i < length; ++i)
 			{
-				float dist = (x - displacements[i].x) * (x - displacements[i].x) + (y - displacements[i].y) * (y - displacements[i].y);
-				float height = displacements[i].z - dist * dist;
-				if (dist == 0)
-					height = displacements[i].z;
-				if (map[y * map_size + x] < height)
-					map[y * map_size + x] = height;
+				float dist = (map[z * map_size + x].x - displacements[i].x) * (map[z * map_size + x].x - displacements[i].x) +
+					(map[z * map_size + x].z - displacements[i].y) * (map[z * map_size + x].z - displacements[i].y);
+				float height = displacements[i].z / (dist + 1);
+				if (map[z * map_size + x].y < height)
+					map[z * map_size + x].y = height;
 			}
 		}
 	}
 
-	/*for (int x = 0; x < map_size; ++x)
+	// print map
+/*	for (int y = 0; y < map_size; ++y)
 	{
-		for (int y = 0; y < map_size; ++y)
+		for (int x = 0; x < map_size; ++x)
 		{
-			std::cout << map[y * map_size + x] << " ";
+			std::cout << map[y * map_size + x].x << " ";
 		}
 		std::cout << "\n";
-	}*/		
+	}*/	
 }
 
 void	Landscape::vertex_buffer()
@@ -78,30 +84,28 @@ void	Landscape::vertex_buffer()
 	{
 		for (int x = 0; x < map_size - 1; ++x)
 		{
-			vertices[k + 0] = x;
-			vertices[k + 1] = map[y * map_size + x];
-			vertices[k + 2] = y;
-			vertices[k + 3] = x + 1;
-			vertices[k + 4] = map[y * map_size + x + 1];
-			vertices[k + 5] = y;
-			vertices[k + 6] = x + 1;
-			vertices[k + 7] = map[(y + 1) * map_size + x + 1];
-			vertices[k + 8] = y + 1;
-			vertices[k + 9] = x;
-			vertices[k + 10] = map[y * map_size + x];
-			vertices[k + 11] = y;
-			vertices[k + 12] = x;
-			vertices[k + 13] = map[(y + 1) * map_size + x];
-			vertices[k + 14] = y + 1;
-			vertices[k + 15] = x + 1;
-			vertices[k + 16] = map[(y + 1) * map_size + x + 1];
-			vertices[k + 17] = y + 1;
+			
+			vertices[k + 0] = map[y * map_size + x].x;
+			vertices[k + 1] = map[y * map_size + x].y;
+			vertices[k + 2] = map[y * map_size + x].z;
+			vertices[k + 3] = map[y * map_size + x + 1].x;
+			vertices[k + 4] = map[y * map_size + x + 1].y;
+			vertices[k + 5] = map[y * map_size + x + 1].z;
+			vertices[k + 6] = map[(y + 1) * map_size + x + 1].x;
+			vertices[k + 7] = map[(y + 1) * map_size + x + 1].y;
+			vertices[k + 8] = map[(y + 1) * map_size + x + 1].z;
+			vertices[k + 9] = map[y * map_size + x].x;
+			vertices[k + 10] = map[y * map_size + x].y;
+			vertices[k + 11] = map[y * map_size + x].z;
+			vertices[k + 12] = map[(y + 1) * map_size + x].x;
+			vertices[k + 13] = map[(y + 1) * map_size + x].y;
+			vertices[k + 14] = map[(y + 1) * map_size + x].z;
+			vertices[k + 15] = map[(y + 1) * map_size + x + 1].x;
+			vertices[k + 16] = map[(y + 1) * map_size + x + 1].y;
+			vertices[k + 17] = map[(y + 1) * map_size + x + 1].z;
 			k += 18;
 		}
 	}
-
-	/*for (int i = 0; i < k; ++i)
-		vertices[i] /= 5;*/
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
