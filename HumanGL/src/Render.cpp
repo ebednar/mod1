@@ -8,7 +8,7 @@
 
 void Render::init()
 {
-	projection = perspective(60.0f * M_PI / 180.0f, 640.0f / 480.0f, 0.1f, 100.0f);
+	projection = perspective(60.0f * M_PI / 180.0f, 1280.0f / 720.0f, 0.1f, 100.0f);
     animation_key = "idle";
 }
 
@@ -183,4 +183,46 @@ void    Render::draw_landscape(Landscape* landscape, Camera* cam)
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, projection.mat);
     glBindVertexArray(landscape->vao);
     glDrawArrays(GL_TRIANGLES, 0, (landscape->map_size - 1) * (landscape->map_size - 1) * 3 * 2);
+}
+
+void    Render::draw_water(Water* water, Camera* cam)
+{
+    int k = 0;
+    for (int y = 0; y < water->map_size - 1; ++y)
+    {
+        for (int x = 0; x < water->map_size - 1; ++x)
+        {
+            water->vertices[k + 0] = water->water_map[y * water->map_size + x].x;
+            water->vertices[k + 1] = water->water_map[y * water->map_size + x].level;
+            water->vertices[k + 2] = water->water_map[y * water->map_size + x].z;
+            water->vertices[k + 3] = water->water_map[y * water->map_size + x + 1].x;
+            water->vertices[k + 4] = water->water_map[y * water->map_size + x + 1].level;
+            water->vertices[k + 5] = water->water_map[y * water->map_size + x + 1].z;
+            water->vertices[k + 6] = water->water_map[(y + 1) * water->map_size + x + 1].x;
+            water->vertices[k + 7] = water->water_map[(y + 1) * water->map_size + x + 1].level;
+            water->vertices[k + 8] = water->water_map[(y + 1) * water->map_size + x + 1].z;
+            water->vertices[k + 9] = water->water_map[y * water->map_size + x].x;
+            water->vertices[k + 10] = water->water_map[y * water->map_size + x].level;
+            water->vertices[k + 11] = water->water_map[y * water->map_size + x].z;
+            water->vertices[k + 12] = water->water_map[(y + 1) * water->map_size + x].x;
+            water->vertices[k + 13] = water->water_map[(y + 1) * water->map_size + x].level;
+            water->vertices[k + 14] = water->water_map[(y + 1) * water->map_size + x].z;
+            water->vertices[k + 15] = water->water_map[(y + 1) * water->map_size + x + 1].x;
+            water->vertices[k + 16] = water->water_map[(y + 1) * water->map_size + x + 1].level;
+            water->vertices[k + 17] = water->water_map[(y + 1) * water->map_size + x + 1].z;
+            k += 18;
+        }
+
+    }
+    glUseProgram(water->shader_id);
+    unsigned int view_loc = glGetUniformLocation(water->shader_id, "u_V");
+    glUniformMatrix4fv(view_loc, 1, GL_FALSE, cam->view.mat);
+    unsigned int proj_loc = glGetUniformLocation(water->shader_id, "u_P");
+    glUniformMatrix4fv(proj_loc, 1, GL_FALSE, projection.mat);
+    glBindVertexArray(water->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, water->vbo);
+    glBufferData(GL_ARRAY_BUFFER, (water->map_size - 1) * (water->map_size - 1) * 3 * 2 * 3 * sizeof(float), water->vertices, GL_DYNAMIC_DRAW);
+    glDrawArrays(GL_TRIANGLES, 0, (water->map_size - 1) * (water->map_size - 1) * 3 * 2);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }

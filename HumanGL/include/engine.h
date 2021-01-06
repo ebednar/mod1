@@ -6,6 +6,7 @@
 #include "skybox.h"
 #include "scene.h"
 #include "landscape.h"
+#include "water.h"
 
 class Engine {
 public:
@@ -15,6 +16,7 @@ public:
 	Controls					controls;
 	Skybox						skybox;
 	Landscape					landscape;
+	Water						water;
 	Entity						*player;
 	std::vector<Model *>		models;
 	bool						free_cam;

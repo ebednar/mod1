@@ -6,14 +6,14 @@
 
 Landscape::Landscape()
 {
-	map_size = 50;
+	map_size = 100;
 	map = new point[map_size * map_size];
 	for (int z = 1; z < map_size; ++z)
 	{
 		for (int x = 1; x < map_size; ++x)
 		{
-			map[z * map_size + x].x = x / 5.0f;
-			map[z * map_size + x].z = z / 5.0f;
+			map[z * map_size + x].x = x / 10.0f;
+			map[z * map_size + x].z = z / 10.0f;
 		}
 	}
 }

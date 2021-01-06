@@ -4,6 +4,8 @@
 #include "skybox.h"
 #include "Animator.h"
 #include "landscape.h"
+#include "water.h"
+
 class Render
 {
 public:
@@ -15,6 +17,7 @@ public:
 	void	draw_skybox(Skybox *skybox, Camera* cam);
     void    draw_child(Entity* ent, Animator *animator,  Scene *scene, Camera *cam, mat4 par_model);
 	void	draw_landscape(Landscape* landscape, Camera *cam);
+	void	draw_water(Water* water, Camera *cam);
 	std::string	animation_key;
 private:
 	mat4	projection;

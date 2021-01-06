@@ -1209,6 +1209,9 @@
     <ClInclude Include="include\landscape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\water.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\glm\detail\func_common.inl">
@@ -1674,6 +1677,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\landscape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\water.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
