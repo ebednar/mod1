@@ -14,7 +14,6 @@ void	Water::init(Landscape* land)
     this->land = land;
     map_size = land->map_size;
     water_map = new water_point[map_size * map_size];
-    flow_map = new bool[map_size * map_size];
     for (int i = 0; i < map_size * map_size; ++i)
     {
         water_map[i].x = land->map[i].x;
@@ -22,8 +21,9 @@ void	Water::init(Landscape* land)
         water_map[i].level = 0.0f;
         water_map[i].sum_level = water_map[i].level + land->map[i].y;
         water_map[i].rend_level = 0.0f;
-        flow_map[i] = false;
     }
+    step = 0.002f;
+    wave_start = false;
 }
 
 void	Water::vertex_buffer()
@@ -75,10 +75,10 @@ void    Water::wave()
 
 void    Water::rain()
 {
-    for (int j = 0; j < 6; ++j)
+    for (int j = 0; j < 2; ++j)
     {
-        int i = rand() % ((map_size - 1) * (map_size - 1));
-        float drop = 1 * step;
+        int i = rand() % ((map_size) * (map_size));
+        float drop = 1.0f * step;
         water_map[i].level += drop;
         water_map[i + 1].level += drop;
         water_map[map_size + i].level += drop;
@@ -97,10 +97,6 @@ void    Water::recalc(int i)
 
 void	Water::flow()
 {
-    for (int i = 0; i < map_size * map_size; ++i)
-    {
-        flow_map[i] = false;
-    }
     //    for (int y = 3; y < map_size - 2; ++y)
     //	{
     //		for (int x = 3; x < map_size - 2; ++x)
@@ -113,9 +109,7 @@ void	Water::flow()
     {
         for (int x = 0; x < map_size; ++x)
         {
-            recalc(y * map_size + x);
-
-            if (water_map[y * map_size + x].level < step)
+            if (water_map[y * map_size + x].level <= step)
                 continue;
 
             if (x < map_size - 1 && water_map[y * map_size + x].level > 0.0f
@@ -123,11 +117,15 @@ void	Water::flow()
             {
                 //                if (water_map[y * map_size + x + 1].level == 0.0f)
                 //                    water_map[y * map_size + x + 1].level = land->map[y * map_size + x + 1].y;
-                float wave_step = (water_map[y * map_size + x].sum_level - water_map[y * map_size + x + 1].sum_level) / 10.0f;
-                //                std::cout << wave_step << std::endl;
+                float flow_step;
+                if (land->map[y * map_size + x].y > water_map[y * map_size + x + 1].sum_level)
+                    flow_step = water_map[y * map_size + x].level / 10.0f;
+                else
+                    flow_step = (water_map[y * map_size + x].sum_level - water_map[y * map_size + x + 1].sum_level) / 10.0f;
+                //                std::cout << flow_step << std::endl;
 
-                water_map[y * map_size + x].level -= 1 * wave_step;
-                water_map[y * map_size + x + 1].level += 1 * wave_step;
+                water_map[y * map_size + x].level -= 1 * flow_step;
+                water_map[y * map_size + x + 1].level += 1 * flow_step;
                 recalc(y * map_size + x + 1);
                 recalc(y * map_size + x);
             }
@@ -136,11 +134,15 @@ void	Water::flow()
             {
                 //                if (water_map[y * map_size + x - 1].level == 0.0f)
                 //                    water_map[y * map_size + x - 1].level = land->map[y * map_size + x - 1].y;
-                float wave_step = (water_map[y * map_size + x].sum_level - water_map[y * map_size + x - 1].sum_level) / 10.0f;
-                //                std::cout << wave_step << std::endl;
+                float flow_step;
+                if (land->map[y * map_size + x].y > water_map[y * map_size + x - 1].sum_level)
+                    flow_step = water_map[y * map_size + x].level / 10.0f;
+                else
+                    flow_step = (water_map[y * map_size + x].sum_level - water_map[y * map_size + x - 1].sum_level) / 10.0f;
+                //                std::cout << flow_step << std::endl;
 
-                water_map[y * map_size + x].level -= 1 * wave_step;
-                water_map[y * map_size + x - 1].level += 1 * wave_step;
+                water_map[y * map_size + x].level -= 1 * flow_step;
+                water_map[y * map_size + x - 1].level += 1 * flow_step;
                 recalc(y * map_size + x - 1);
                 recalc(y * map_size + x);
             }
@@ -149,11 +151,15 @@ void	Water::flow()
             {
                 //                if (water_map[(y + 1) * map_size + x].level == 0.0f)
                 //                    water_map[(y + 1) * map_size + x].level = land->map[(y + 1) * map_size + x].y;
-                float wave_step = (water_map[y * map_size + x].sum_level - water_map[(y + 1) * map_size + x].sum_level) / 10.0f;
-                //                std::cout << wave_step << std::endl;
+                float flow_step;
+                if (land->map[y * map_size + x].y > water_map[(y + 1) * map_size + x].sum_level)
+                    flow_step = water_map[y * map_size + x].level / 10.0f;
+                else
+                    flow_step = (water_map[y * map_size + x].sum_level - water_map[(y + 1) * map_size + x].sum_level) / 10.0f;
+                //                std::cout << flow_step << std::endl;
 
-                water_map[y * map_size + x].level -= 1 * wave_step;
-                water_map[(y + 1) * map_size + x].level += 1 * wave_step;
+                water_map[y * map_size + x].level -= 1 * flow_step;
+                water_map[(y + 1) * map_size + x].level += 1 * flow_step;
                 recalc((y + 1) * map_size + x);
                 recalc(y * map_size + x);
             }
@@ -162,11 +168,15 @@ void	Water::flow()
             {
                 //                if (water_map[(y - 1) * map_size + x].level == 0.0f)
                 //                    water_map[(y - 1) * map_size + x].level = land->map[(y - 1) * map_size + x].y;
-                float wave_step = (water_map[y * map_size + x].sum_level - water_map[(y - 1) * map_size + x].sum_level) / 10.0f;
-                //                std::cout << wave_step << std::endl;
+                float flow_step;
+                if (land->map[y * map_size + x].y > water_map[(y - 1) * map_size + x].sum_level)
+                    flow_step = water_map[y * map_size + x].level / 10.0f;
+                else
+                    flow_step = (water_map[y * map_size + x].sum_level - water_map[(y - 1) * map_size + x].sum_level) / 10.0f;
+                //                std::cout << flow_step << std::endl;
 
-                water_map[y * map_size + x].level -= 1 * wave_step;
-                water_map[(y - 1) * map_size + x].level += 1 * wave_step;
+                water_map[y * map_size + x].level -= 1 * flow_step;
+                water_map[(y - 1) * map_size + x].level += 1 * flow_step;
                 recalc((y - 1) * map_size + x);
                 recalc(y * map_size + x);
             }

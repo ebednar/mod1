@@ -110,9 +110,9 @@ void Engine::run_engine()
 		cam.yaw = controls.yaw;
 		cam.pitch = controls.pitch;
 
-		//water.raise();
+		water.raise();
 		//water.wave();
-		water.rain();
+		//water.rain();
 		water.flow();
 		water.flow();
 		water.flow();
@@ -122,10 +122,9 @@ void Engine::run_engine()
 		cam.update_free();
 		rend.draw_skybox(&skybox, &cam);
 		rend.draw_scene(&animator, &scene, &cam);
-		rend.draw_landscape(&landscape, &cam);
+		rend.draw_landscape(&scene, &landscape, &cam);
 		rend.draw_water(&water, &cam);
 		//rend.draw_pbr(&scene, &cam);
-
 
   //      ImGui::Text("Use buttons to change animation"); // Display some text (you can use a format strings too)
   //      if (ImGui::Button("Idle"))
