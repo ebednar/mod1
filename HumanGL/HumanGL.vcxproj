@@ -534,6 +534,7 @@
     <ClInclude Include="include\landscape.h" />
     <ClInclude Include="include\maths.h" />
     <ClInclude Include="include\Model.h" />
+    <ClInclude Include="include\rain.h" />
     <ClInclude Include="include\Render.h" />
     <ClInclude Include="include\sandbox.h" />
     <ClInclude Include="include\scene.h" />
@@ -698,6 +699,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\maths.cpp" />
     <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\rain.cpp" />
     <ClCompile Include="src\Render.cpp" />
     <ClCompile Include="src\sandbox.cpp" />
     <ClCompile Include="src\scene.cpp" />

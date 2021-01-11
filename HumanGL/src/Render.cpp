@@ -6,7 +6,7 @@
 
 void Render::init()
 {
-	projection = perspective(60.0f * M_PI / 180.0f, 640.0f / 480.0f, 0.1f, 100.0f);
+	projection = perspective(60.0f * M_PI / 180.0f, 1280.0f / 720.0f, 0.1f, 100.0f);
     animation_key = "idle";
 }
 
@@ -49,6 +49,8 @@ void Render::draw_scene(Animator *animator, Scene *scene, Camera *cam)
         glUniform1f(glGetUniformLocation(mod->shader_id, "light.linear"), 0.045f);
         glUniform1f(glGetUniformLocation(mod->shader_id, "light.quadratic"), 0.0075f);
         glDrawArrays(GL_TRIANGLES, 0, mod->ind_number);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
 	}
 }
 
@@ -66,6 +68,8 @@ void	Render::draw_skybox(Skybox *skybox, Camera* cam)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->texture);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDepthMask(GL_TRUE);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 void    Render::draw_landscape(Scene *scene, Landscape* landscape, Camera* cam)
@@ -80,7 +84,7 @@ void    Render::draw_landscape(Scene *scene, Landscape* landscape, Camera* cam)
     glUniform3f(glGetUniformLocation(landscape->shader_id, "viewPos"), cam->pos.x, cam->pos.y, cam->pos.z);
     glUniform3f(glGetUniformLocation(landscape->shader_id, "material.specular"), 0.4f, 0.4f, 0.4f);
     glUniform1f(glGetUniformLocation(landscape->shader_id, "material.shininess"), 16.0f);
-    glUniform3f(glGetUniformLocation(landscape->shader_id, "light.ambient"), 0.3f, 0.3f, 0.3f);
+    glUniform3f(glGetUniformLocation(landscape->shader_id, "light.ambient"), 0.5f, 0.5f, 0.5f);
     glUniform3f(glGetUniformLocation(landscape->shader_id, "light.diffuse"), scene->point_lights[0].color.x, scene->point_lights[0].color.y, scene->point_lights[0].color.z);
     glUniform3f(glGetUniformLocation(landscape->shader_id, "light.specular"), 0.5f, 0.5f, 0.5f);
     glUniform1f(glGetUniformLocation(landscape->shader_id, "light.constant"), 1.0f);
@@ -89,6 +93,8 @@ void    Render::draw_landscape(Scene *scene, Landscape* landscape, Camera* cam)
 
     glBindVertexArray(landscape->vao);
     glDrawArrays(GL_TRIANGLES, 0, (landscape->map_size - 1) * (landscape->map_size - 1) * 3 * 2);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 void    Render::draw_water(Water* water, Camera* cam)
@@ -212,6 +218,32 @@ void    Render::draw_water(Water* water, Camera* cam)
     glBindBuffer(GL_ARRAY_BUFFER, water->vbo);
     glBufferData(GL_ARRAY_BUFFER, ((water->map_size - 1) * (water->map_size - 1) * 3 * 2 * 3 + (water->map_size - 1) * 18 * 4) * sizeof(float), water->vertices, GL_DYNAMIC_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, (water->map_size - 1) * (water->map_size - 1) * 3 * 2 + (water->map_size - 1) * 18 * 4);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void    Render::draw_rain(Rain* rain, Camera* cam)
+{
+    int k = 0;
+    for (int i = 0; i < rain->drops_number; ++i)
+    {
+        rain->vertices[k + 0] = rain->drops[i].x;
+        rain->vertices[k + 1] = rain->drops[i].y;
+        rain->vertices[k + 2] = rain->drops[i].z;
+        rain->vertices[k + 3] = rain->drops[i].x;
+        rain->vertices[k + 4] = rain->drops[i].y - 0.4f;
+        rain->vertices[k + 5] = rain->drops[i].z;
+        k += 6;
+    }
+    glUseProgram(rain->shader_id);
+    unsigned int view_loc = glGetUniformLocation(rain->shader_id, "u_V");
+    glUniformMatrix4fv(view_loc, 1, GL_FALSE, cam->view.mat);
+    unsigned int proj_loc = glGetUniformLocation(rain->shader_id, "u_P");
+    glUniformMatrix4fv(proj_loc, 1, GL_FALSE, projection.mat);
+    glBindVertexArray(rain->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, rain->vbo);
+    glBufferData(GL_ARRAY_BUFFER, rain->drops_number * 6 * sizeof(float), rain->vertices, GL_DYNAMIC_DRAW);
+    glDrawArrays(GL_LINES, 0, rain->drops_number * 2);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }

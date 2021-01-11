@@ -1,6 +1,11 @@
 #pragma once
 #include "landscape.h"
 
+enum class water_state
+{
+	raise, wave, rain
+};
+
 struct water_point
 {
 	float	x;
@@ -24,6 +29,7 @@ public:
 	water_point				*water_map;
 	Landscape				*land;
 	float					*vertices;
+	water_state				w_state;
 	unsigned int			vbo;
 	unsigned int			vao;
 	int						shader_id;
@@ -35,6 +41,7 @@ public:
 	void	init(Landscape* land);
 	void	vertex_buffer();
 	void	set_shader(const char* vPath, const char* fSPath);
+	void	reset();
 	void	raise();
 	void	wave();
 	void	rain();
