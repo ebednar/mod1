@@ -6,14 +6,14 @@
 
 Landscape::Landscape()
 {
-	map_size = 100;
+	map_size = 200;
 	map = new point[map_size * map_size];
-	for (int z = 1; z < map_size; ++z)
+	for (int z = 0; z < map_size; ++z)
 	{
-		for (int x = 1; x < map_size; ++x)
+		for (int x = 0; x < map_size; ++x)
 		{
-			map[z * map_size + x].x = x / 10.0f;
-			map[z * map_size + x].z = z / 10.0f;
+			map[z * map_size + x].x = x / 20.0f;
+			map[z * map_size + x].z = z / 20.0f;
 		}
 	}
 }
@@ -50,15 +50,16 @@ void	Landscape::build_heights()
 {
 	int length = displacements.size();
 
-	for (int z = 1; z < map_size - 1; ++z)
+	for (int z = 2; z < map_size - 1; ++z)
 	{
-		for (int x = 1; x < map_size - 1; ++x)
+		for (int x = 2; x < map_size - 1; ++x)
 		{
 			for (int i = 0; i < length; ++i)
 			{
 				float dist = (map[z * map_size + x].x - displacements[i].x) * (map[z * map_size + x].x - displacements[i].x) +
 					(map[z * map_size + x].z - displacements[i].y) * (map[z * map_size + x].z - displacements[i].y);
 				float height = displacements[i].z / (dist + 1);
+				//float height = displacements[i].z;
 				if (map[z * map_size + x].y < height)
 					map[z * map_size + x].y = height;
 			}
@@ -66,25 +67,25 @@ void	Landscape::build_heights()
 	}
 
 	// print map
-/*	for (int y = 0; y < map_size; ++y)
-	{
-		for (int x = 0; x < map_size; ++x)
-		{
-			std::cout << map[y * map_size + x].x << " ";
-		}
-		std::cout << "\n";
-	}*/	
+//	for (int y = 0; y < map_size; ++y)
+//	{
+//		for (int x = 0; x < map_size; ++x)
+//		{
+//			std::cout << map[y * map_size + x].x << " ";
+//		}
+//		std::cout << "\n";
+//	}
 }
 
 void	Landscape::vertex_buffer()
 {
-	float *vertices = new float[(map_size - 1) * (map_size - 1) * 3 * 2 * 3];
+	float* vertices = new float[(map_size - 1) * (map_size - 1) * 3 * 2 * 3];
 	int k = 0;
 	for (int y = 0; y < map_size - 1; ++y)
 	{
 		for (int x = 0; x < map_size - 1; ++x)
 		{
-			
+
 			vertices[k + 0] = map[y * map_size + x].x;
 			vertices[k + 1] = map[y * map_size + x].y;
 			vertices[k + 2] = map[y * map_size + x].z;

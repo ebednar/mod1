@@ -188,27 +188,110 @@ void    Render::draw_landscape(Landscape* landscape, Camera* cam)
 void    Render::draw_water(Water* water, Camera* cam)
 {
     int k = 0;
+    for (int x = 0; x < water->map_size - 1; ++x)
+    {
+        water->vertices[k + 0] = water->water_map[x].x;
+        water->vertices[k + 1] = 0.0f;
+        water->vertices[k + 2] = water->water_map[x].z;
+        water->vertices[k + 3] = water->water_map[x + 1].x;
+        water->vertices[k + 4] = 0.0f;
+        water->vertices[k + 5] = water->water_map[x + 1].z;
+        water->vertices[k + 6] = water->water_map[x + 1].x;
+        water->vertices[k + 7] = water->water_map[x + 1].sum_level;
+        water->vertices[k + 8] = water->water_map[x + 1].z;
+        water->vertices[k + 9] = water->water_map[x].x;
+        water->vertices[k + 10] = 0.0f;
+        water->vertices[k + 11] = water->water_map[x].z;
+        water->vertices[k + 12] = water->water_map[x].x;
+        water->vertices[k + 13] = water->water_map[x].sum_level;
+        water->vertices[k + 14] = water->water_map[x].z;
+        water->vertices[k + 15] = water->water_map[x + 1].x;
+        water->vertices[k + 16] = water->water_map[x + 1].sum_level;
+        water->vertices[k + 17] = water->water_map[x + 1].z;
+        k += 18;
+
+        water->vertices[k + 0] = water->water_map[water->map_size * (water->map_size - 1) + x].x;
+        water->vertices[k + 1] = 0.0f;
+        water->vertices[k + 2] = water->water_map[water->map_size * (water->map_size - 1) + x].z;
+        water->vertices[k + 3] = water->water_map[water->map_size * (water->map_size - 1) + x + 1].x;
+        water->vertices[k + 4] = 0.0f;
+        water->vertices[k + 5] = water->water_map[water->map_size * (water->map_size - 1) + x + 1].z;
+        water->vertices[k + 6] = water->water_map[water->map_size * (water->map_size - 1) + x + 1].x;
+        water->vertices[k + 7] = water->water_map[water->map_size * (water->map_size - 1) + x + 1].sum_level;
+        water->vertices[k + 8] = water->water_map[water->map_size * (water->map_size - 1) + x + 1].z;
+        water->vertices[k + 9] = water->water_map[water->map_size * (water->map_size - 1) + x].x;
+        water->vertices[k + 10] = 0.0f;
+        water->vertices[k + 11] = water->water_map[water->map_size * (water->map_size - 1) + x].z;
+        water->vertices[k + 12] = water->water_map[water->map_size * (water->map_size - 1) + x].x;
+        water->vertices[k + 13] = water->water_map[water->map_size * (water->map_size - 1) + x].sum_level;
+        water->vertices[k + 14] = water->water_map[water->map_size * (water->map_size - 1) + x].z;
+        water->vertices[k + 15] = water->water_map[water->map_size * (water->map_size - 1) + x + 1].x;
+        water->vertices[k + 16] = water->water_map[water->map_size * (water->map_size - 1) + x + 1].sum_level;
+        water->vertices[k + 17] = water->water_map[water->map_size * (water->map_size - 1) + x + 1].z;
+        k += 18;
+
+        water->vertices[k + 0] = water->water_map[water->map_size * x].x;
+        water->vertices[k + 1] = 0.0f;
+        water->vertices[k + 2] = water->water_map[water->map_size * x].z;
+        water->vertices[k + 3] = water->water_map[water->map_size * (x + 1)].x;
+        water->vertices[k + 4] = 0.0f;
+        water->vertices[k + 5] = water->water_map[water->map_size * (x + 1)].z;
+        water->vertices[k + 6] = water->water_map[water->map_size * (x + 1)].x;
+        water->vertices[k + 7] = water->water_map[water->map_size * (x + 1)].sum_level;
+        water->vertices[k + 8] = water->water_map[water->map_size * (x + 1)].z;
+        water->vertices[k + 9] = water->water_map[water->map_size * x].x;
+        water->vertices[k + 10] = 0.0f;
+        water->vertices[k + 11] = water->water_map[water->map_size * x].z;
+        water->vertices[k + 12] = water->water_map[water->map_size * x].x;
+        water->vertices[k + 13] = water->water_map[water->map_size * x].sum_level;
+        water->vertices[k + 14] = water->water_map[water->map_size * x].z;
+        water->vertices[k + 15] = water->water_map[water->map_size * (x + 1)].x;
+        water->vertices[k + 16] = water->water_map[water->map_size * (x + 1)].sum_level;
+        water->vertices[k + 17] = water->water_map[water->map_size * (x + 1)].z;
+        k += 18;
+
+        water->vertices[k + 0] = water->water_map[water->map_size * x + (water->map_size - 1)].x;
+        water->vertices[k + 1] = 0.0f;
+        water->vertices[k + 2] = water->water_map[water->map_size * x + (water->map_size - 1)].z;
+        water->vertices[k + 3] = water->water_map[water->map_size * (x + 1) + (water->map_size - 1)].x;
+        water->vertices[k + 4] = 0.0f;
+        water->vertices[k + 5] = water->water_map[water->map_size * (x + 1) + (water->map_size - 1)].z;
+        water->vertices[k + 6] = water->water_map[water->map_size * (x + 1) + (water->map_size - 1)].x;
+        water->vertices[k + 7] = water->water_map[water->map_size * (x + 1) + (water->map_size - 1)].sum_level;
+        water->vertices[k + 8] = water->water_map[water->map_size * (x + 1) + (water->map_size - 1)].z;
+        water->vertices[k + 9] = water->water_map[water->map_size * x + (water->map_size - 1)].x;
+        water->vertices[k + 10] = 0.0f;
+        water->vertices[k + 11] = water->water_map[water->map_size * x + (water->map_size - 1)].z;
+        water->vertices[k + 12] = water->water_map[water->map_size * x + (water->map_size - 1)].x;
+        water->vertices[k + 13] = water->water_map[water->map_size * x + (water->map_size - 1)].sum_level;
+        water->vertices[k + 14] = water->water_map[water->map_size * x + (water->map_size - 1)].z;
+        water->vertices[k + 15] = water->water_map[water->map_size * (x + 1) + (water->map_size - 1)].x;
+        water->vertices[k + 16] = water->water_map[water->map_size * (x + 1) + (water->map_size - 1)].sum_level;
+        water->vertices[k + 17] = water->water_map[water->map_size * (x + 1) + (water->map_size - 1)].z;
+        k += 18;
+    }
+
     for (int y = 0; y < water->map_size - 1; ++y)
     {
         for (int x = 0; x < water->map_size - 1; ++x)
         {
             water->vertices[k + 0] = water->water_map[y * water->map_size + x].x;
-            water->vertices[k + 1] = water->water_map[y * water->map_size + x].level;
+            water->vertices[k + 1] = water->water_map[y * water->map_size + x].rend_level;
             water->vertices[k + 2] = water->water_map[y * water->map_size + x].z;
             water->vertices[k + 3] = water->water_map[y * water->map_size + x + 1].x;
-            water->vertices[k + 4] = water->water_map[y * water->map_size + x + 1].level;
+            water->vertices[k + 4] = water->water_map[y * water->map_size + x + 1].rend_level;
             water->vertices[k + 5] = water->water_map[y * water->map_size + x + 1].z;
             water->vertices[k + 6] = water->water_map[(y + 1) * water->map_size + x + 1].x;
-            water->vertices[k + 7] = water->water_map[(y + 1) * water->map_size + x + 1].level;
+            water->vertices[k + 7] = water->water_map[(y + 1) * water->map_size + x + 1].rend_level;
             water->vertices[k + 8] = water->water_map[(y + 1) * water->map_size + x + 1].z;
             water->vertices[k + 9] = water->water_map[y * water->map_size + x].x;
-            water->vertices[k + 10] = water->water_map[y * water->map_size + x].level;
+            water->vertices[k + 10] = water->water_map[y * water->map_size + x].rend_level;
             water->vertices[k + 11] = water->water_map[y * water->map_size + x].z;
             water->vertices[k + 12] = water->water_map[(y + 1) * water->map_size + x].x;
-            water->vertices[k + 13] = water->water_map[(y + 1) * water->map_size + x].level;
+            water->vertices[k + 13] = water->water_map[(y + 1) * water->map_size + x].rend_level;
             water->vertices[k + 14] = water->water_map[(y + 1) * water->map_size + x].z;
             water->vertices[k + 15] = water->water_map[(y + 1) * water->map_size + x + 1].x;
-            water->vertices[k + 16] = water->water_map[(y + 1) * water->map_size + x + 1].level;
+            water->vertices[k + 16] = water->water_map[(y + 1) * water->map_size + x + 1].rend_level;
             water->vertices[k + 17] = water->water_map[(y + 1) * water->map_size + x + 1].z;
             k += 18;
         }
@@ -221,8 +304,8 @@ void    Render::draw_water(Water* water, Camera* cam)
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, projection.mat);
     glBindVertexArray(water->vao);
     glBindBuffer(GL_ARRAY_BUFFER, water->vbo);
-    glBufferData(GL_ARRAY_BUFFER, (water->map_size - 1) * (water->map_size - 1) * 3 * 2 * 3 * sizeof(float), water->vertices, GL_DYNAMIC_DRAW);
-    glDrawArrays(GL_TRIANGLES, 0, (water->map_size - 1) * (water->map_size - 1) * 3 * 2);
+    glBufferData(GL_ARRAY_BUFFER, ((water->map_size - 1) * (water->map_size - 1) * 3 * 2 * 3 + (water->map_size - 1) * 18 * 4) * sizeof(float), water->vertices, GL_DYNAMIC_DRAW);
+    glDrawArrays(GL_TRIANGLES, 0, (water->map_size - 1) * (water->map_size - 1) * 3 * 2 + (water->map_size - 1) * 18 * 4);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
